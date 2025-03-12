@@ -1,10 +1,9 @@
 package com.henrique.Projeto1.run;
 
-import jakarta.annotation.Resource;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +18,6 @@ public class RunController {
         this.runRepository = runRepository;
 
     }
-
-
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("")
@@ -50,16 +47,19 @@ public class RunController {
 
     };
 
-
-
+    @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("{id}")
     public void deleteRun(@PathVariable Integer id){
-        runRepository.deleteRun(id);
+         runRepository.deleteRun(id);
 
     }
 
 
-
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping("{id}")
+    public Optional<Run> updateRun(@RequestBody Run run, @PathVariable Integer id){
+        return runRepository.updateRun(run,id);
+    };
 
 
 

@@ -1,14 +1,8 @@
 package com.henrique.Projeto1.run;
 
-import jakarta.annotation.PostConstruct;
-import org.springframework.http.HttpStatus;
 import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.server.ResponseStatusException;
-
 import java.sql.Types;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,13 +45,18 @@ public class RunRepository {
         }
 
 
-//    public void updateRun(Run run, Integer Id){
-//        Optional<Run> run = findById(id);
-//
-//
-//
-//
-//    }
+    public Optional<Run> updateRun(Run run, Integer id){
+        findById(run.id());
+        jdbcClient.sql("UPDATE Run SET title = :title, started_on = :started_on, finished_on = :finished_on, km = :km, location = :location WHERE id = :id").
+                param("id", id).
+                param("title", run.title(), Types.VARCHAR).
+                param("started_on", run.startedOn(), Types.TIMESTAMP).
+                param("finished_on",run.finishedOn(), Types.TIMESTAMP).
+                param("km", run.km(), Types.INTEGER).
+                param("location", run.location(), Types.VARCHAR).update();
+        return findById(id);
+
+    };
 
     };
 
