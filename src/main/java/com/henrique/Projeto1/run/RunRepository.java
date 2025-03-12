@@ -1,8 +1,12 @@
 package com.henrique.Projeto1.run;
 
 import jakarta.annotation.PostConstruct;
+import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.sql.Types;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,51 +16,48 @@ import java.util.Optional;
 @Repository
 public class RunRepository {
 
-    private List<Run> runs = new ArrayList<Run>();
+    private final JdbcClient jdbcClient;
 
-
-    public List<Run> findAll(){
-        return runs;
-    }
-
-    public Optional <Run> findById(Integer id){
-
-        return runs.stream().filter(run -> run.id() == id).findFirst();
-    }
-
-
-    public void createRun(Run run){
-        runs.add(run);
-    }
-
-    public void updateRun(Run run,Integer id) {
-
-        Optional<Run> existRun = findById(id);
-
-        existRun.ifPresent(value -> runs.set(runs.indexOf(value), run));
+    public RunRepository(JdbcClient jdbcClient) {
+        this.jdbcClient = jdbcClient;
     };
 
+    public List<Run> findAll(){
+        return jdbcClient.sql("select * from Run").query(Run.class).list();
+    }
+
+
+    public Optional<Run> findById(Integer id){
+        return jdbcClient.sql("SELECT id,title,started_on,finished_on,km,location FROM Run WHERE id = :id").
+                param("id",id).
+                query(Run.class).
+                optional();
+    };
+
+    public Integer createRun(Run run){
+        return jdbcClient.sql("INSERT INTO Run(id,title,started_on,finished_on,km,location)  VALUES(:id, :title, :started_on, :finished_on, :km, :location)").
+                param("id", run.id(), Types.INTEGER).
+                param("title", run.title(), Types.VARCHAR).
+                param("started_on", run.startedOn(), Types.TIMESTAMP).
+                param("finished_on",run.finishedOn(), Types.TIMESTAMP).
+                param("km", run.km(), Types.INTEGER).
+                param("location", run.location(), Types.VARCHAR).update();
+        };
+
+
     public void deleteRun(Integer id){
-        runs.removeIf(run -> run.id().equals(id) );
-    }
+        Optional<Run> resourceId = findById(id);
+        jdbcClient.sql("DELETE FROM Run WHERE id = :id").param("id", id).update();
+        }
 
-    @PostConstruct
-    private void init(){
 
-        runs.add(new Run(
-                1,
-                "Morning Run",
-                LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(45),
-                5,
-                Location.OUTDOOR));
+//    public void updateRun(Run run, Integer Id){
+//        Optional<Run> run = findById(id);
+//
+//
+//
+//
+//    }
 
-        runs.add(new Run(
-                2,
-                "Treadmill Sprint",
-                LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(30),
-                3,
-                Location.INDOOR));
-    }
-}
+    };
+

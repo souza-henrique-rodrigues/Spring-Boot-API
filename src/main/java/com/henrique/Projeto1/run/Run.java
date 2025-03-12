@@ -20,11 +20,11 @@ public record Run(
         ) {
 
 
-        public Run {
-                if (startedOn().isAfter(finishedOn())){
-                        throw  new IllegalArgumentException(("Run time is incorrect"));
-
-                }
-        }
+//        public Run {
+//                if (startedOn().isAfter(finishedOn())){
+//                        throw  new IllegalArgumentException(("Run time is incorrect"));
+//
+//                }
+//        }
 
 }
