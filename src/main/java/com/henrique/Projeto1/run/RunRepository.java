@@ -24,8 +24,8 @@ public class RunRepository {
     public Optional<Run> findById(Integer id){
         return jdbcClient.sql("SELECT id,title,started_on,finished_on,km,location FROM Run WHERE id = :id").
                 param("id",id).
-                query(Run.class).
-                optional();
+                query(Run.class).optional();
+
     };
 
     public Integer createRun(Run run){

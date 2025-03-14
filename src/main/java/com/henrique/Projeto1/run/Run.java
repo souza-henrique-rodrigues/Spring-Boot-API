@@ -19,12 +19,4 @@ public record Run(
         Location location
         ) {
 
-
-//        public Run {
-//                if (startedOn().isAfter(finishedOn())){
-//                        throw  new IllegalArgumentException(("Run time is incorrect"));
-//
-//                }
-//        }
-
 }

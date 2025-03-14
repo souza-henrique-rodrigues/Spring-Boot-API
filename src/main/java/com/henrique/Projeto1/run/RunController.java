@@ -13,9 +13,11 @@ import java.util.Optional;
 public class RunController {
 
     private final RunRepository runRepository;
+    private final RunService runService;
 
-    public RunController(RunRepository runRepository){
+    public RunController(RunRepository runRepository, RunService runService){
         this.runRepository = runRepository;
+        this.runService = runService;
 
     }
 
@@ -29,7 +31,7 @@ public class RunController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("{id}")
     public Optional<Run> findById(@PathVariable Integer id){
-        return runRepository.findById(id);
+        return runService.findById(id);
     }
 
 

@@ -19,16 +19,5 @@ public class Application {
 	}
 
 
-	@Bean
-	CommandLineRunner runner(){
-		return args -> {
-			Run run = new Run(10,"corrida pampa", LocalDateTime.now(), LocalDateTime.now().plusHours(1),2, Location.INDOOR);
-			log.info("Run" + run);
-		};
-
-	}
-
-
-
 
 }
